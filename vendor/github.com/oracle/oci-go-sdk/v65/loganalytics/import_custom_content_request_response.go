@@ -55,20 +55,36 @@ func (request ImportCustomContentRequest) String() string {
 
 // HTTPRequest implements the OCIRequest interface
 func (request ImportCustomContentRequest) HTTPRequest(method, path string, binaryRequestBody *common.OCIReadSeekCloser, extraHeaders map[string]string) (http.Request, error) {
+	common.Debugf("SDK Http req")
+	bb2 := make([]byte, 1335)
+	binaryRequestBody.Read(bb2)
+	common.Debugf("[SDK] HTTPRequest#61................%v", string(bb2))
+
+
+
 	httpRequest, err := common.MakeDefaultHTTPRequestWithTaggedStructAndExtraHeaders(method, path, request, extraHeaders)
-	if err == nil && binaryRequestBody.Seekable() {
-		common.UpdateRequestBinaryBody(&httpRequest, binaryRequestBody)
-	}
+	//if err == nil && binaryRequestBody.Seekable() {
+	//	common.UpdateRequestBinaryBody(&httpRequest, binaryRequestBody)
+	//}
+	httpRequest.Body = binaryRequestBody
+	bb := make([]byte, 1335)
+	httpRequest.Body.Read(bb)
+	common.Debugf("[SDK]import_custom_content_file body2 ................%v||seekable: %v", string(bb),binaryRequestBody.Seekable())
+
+	common.Debugf("SDK Http req end")
 	return httpRequest, err
 }
 
 // BinaryRequestBody implements the OCIRequest interface
 func (request ImportCustomContentRequest) BinaryRequestBody() (*common.OCIReadSeekCloser, bool) {
 	rsc := common.NewOCIReadSeekCloser(request.ImportCustomContentFileBody)
+	//bb := make([]byte, 1335)
+	//rsc.Read(bb)
+	//common.Debugf("[SDK]import_custom_content_file BinaryRequestBody() ................%v\nseekable %v", string(bb),rsc.Seekable())
 	if rsc.Seekable() {
 		return rsc, true
 	}
-	return nil, true
+	return rsc, true
 
 }
 

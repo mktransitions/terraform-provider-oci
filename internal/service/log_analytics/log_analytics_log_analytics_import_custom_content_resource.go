@@ -7,6 +7,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/oracle/terraform-provider-oci/internal/utils"
+	"io"
 	"io/ioutil"
 
 	"github.com/oracle/terraform-provider-oci/internal/client"
@@ -194,7 +196,9 @@ func (s *LogAnalyticsLogAnalyticsImportCustomContentResourceCrud) Create() error
 		if err != nil {
 			return fmt.Errorf("the specified content file is not available: %q", err)
 		}
-		request.ImportCustomContentFileBody = ioutil.NopCloser(bytes.NewReader(contents))
+		utils.Debugf("Length...........%d", len(contents))
+		body := io.NopCloser(bytes.NewReader(contents))
+		request.ImportCustomContentFileBody = body
 	}
 
 	if expect, ok := s.D.GetOkExists("expect"); ok {

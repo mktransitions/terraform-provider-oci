@@ -832,7 +832,9 @@ func Retry(ctx context.Context, request OCIRetryableRequest, operation OCIOperat
 		isSeekable := false
 		rsc, isBinaryRequest := request.BinaryRequestBody()
 		if rsc != nil && rsc.rc != nil {
-			defer rsc.rc.Close()
+			defer func() {
+				Debugf("[SDK............]Close closer...................%v | %v",isBinaryRequest,rsc.isClosed)
+			rsc.rc.Close()}()
 		}
 		if policy.MaximumNumberAttempts != uint(1) {
 			if rsc.Seekable() {
@@ -864,10 +866,18 @@ func Retry(ctx context.Context, request OCIRetryableRequest, operation OCIOperat
 		for currentOperationAttempt := uint(1); shouldContinueIssuingRequests(currentOperationAttempt, policyToUse.MaximumNumberAttempts); currentOperationAttempt++ {
 			Debugln(fmt.Sprintf("operation attempt #%v", currentOperationAttempt))
 			// rewind body once needed
+			//bb := make([]byte, 1335)
+			//rsc.rc.Read(bb)
+			//Debugf("[SDK]retry.go#875 before binaryRequestBody ................%v", string(bb))
+
 			if isSeekable {
 				rsc = NewOCIReadSeekCloser(rsc.rc)
 				rsc.Seek(curPos, io.SeekStart)
 			}
+			//bb2 := make([]byte, 1335)
+			//rsc.rc.Read(bb2)
+			//Debugf("[SDK]retry.go#875 binaryRequestBody ................%v", string(bb2))
+
 			response, err = operation(ctx, request, rsc, extraHeaders)
 
 			operationResponse := NewOCIOperationResponseExtended(response, err, currentOperationAttempt, endOfWindowTime, backoffScalingFactor, initialAttemptTime)

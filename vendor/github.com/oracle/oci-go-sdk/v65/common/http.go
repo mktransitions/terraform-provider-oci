@@ -708,6 +708,9 @@ func UpdateRequestBinaryBody(httpRequest *http.Request, rsc *OCIReadSeekCloser) 
 	if parseContentLength(httpRequest.Header.Get(requestHeaderContentLength)) == 0 {
 		return
 	}
+	bb2 := make([]byte, 1335)
+	rsc.Read(bb2)
+	Debugf("[SDK]HTTP.go#713................%v", string(bb2))
 	httpRequest.Body = rsc
 	return
 }
