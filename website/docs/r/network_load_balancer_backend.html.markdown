@@ -37,11 +37,11 @@ resource "oci_network_load_balancer_backend" "test_backend" {
 The following arguments are supported:
 
 * `backend_set_name` - (Required) The name of the backend set to which to add the backend server.  Example: `example_backend_set` 
+* `name` - (Required) Unique name identifying the backend within the backend set. Example: `webServer1` 
 * `ip_address` - (Optional) The IP address of the backend server. Example: `10.0.0.3` 
 * `is_backup` - (Optional) (Updatable) Whether the network load balancer should treat this server as a backup unit. If `true`, then the network load balancer forwards no ingress traffic to this backend server unless all other backend servers not marked as "isBackup" fail the health check policy.  Example: `false` 
 * `is_drain` - (Optional) (Updatable) Whether the network load balancer should drain this server. Servers marked "isDrain" receive no incoming traffic.  Example: `false` 
 * `is_offline` - (Optional) (Updatable) Whether the network load balancer should treat this server as offline. Offline servers receive no incoming traffic.  Example: `false` 
-* `name` - (Optional) Optional unique name identifying the backend within the backend set. If not specified, then one will be generated. Example: `webServer1` 
 * `network_load_balancer_id` - (Required) The [OCID](https://docs.cloud.oracle.com/iaas/Content/General/Concepts/identifiers.htm) of the network load balancer to update.
 * `port` - (Required) The communication port for the backend server.  Example: `8080` 
 * `target_id` - (Optional) The IP OCID/Instance OCID associated with the backend server. Example: `ocid1.privateip..oc1.<var>&lt;unique_ID&gt;</var>` 
