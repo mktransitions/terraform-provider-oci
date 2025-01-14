@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"hash/crc32"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"os"
 	"os/user"
@@ -363,4 +364,28 @@ func GetSDKServiceName(clientServiceName string) string {
 	}
 	snakeCase := strings.Replace(strings.Split(clientServiceName, ".")[0], "oci_", "", 1)
 	return strings.Replace(snakeCase, "_", "", -1)
+}
+
+func ListCurrentDirectory() {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		Logf("Error getting current directory: %v", err)
+	}
+
+	// Read the files and directories in the current directory
+	dirEntries, err := os.ReadDir(currentDir)
+	if err != nil {
+		log.Fatalf("Error reading directory: %v", err)
+	}
+	var dirList []string
+	var fileList []string
+	// Iterate and print each file/directory
+	for _, entry := range dirEntries {
+		if !entry.IsDir() {
+			fileList = append(fileList, entry.Name())
+		} else {
+			dirList = append(dirList, entry.Name())
+		}
+	}
+	Debugf("[DEBUG] Files in directory: %s\nFiles: %s\n Directories: %s", currentDir, strings.Join(fileList, ", "), strings.Join(dirList, ", "))
 }

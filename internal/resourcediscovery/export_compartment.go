@@ -415,7 +415,7 @@ func runExportCommand(ctx *tf_export.ResourceDiscoveryContext) error {
 		sem <- struct{}{}
 
 		go func(i int, step resourceDiscoveryStep) {
-			utils.Debugf("[DEBUG] discover: Running step %d", i)
+			utils.Debugf("[DEBUG] discover: Running step %d, %s", i, step.getBaseStep().name)
 			defer elapsed(fmt.Sprintf("time taken in discovering resources for step %d", i), step.getBaseStep(), Discovery)()
 			defer func() {
 				<-sem
@@ -448,7 +448,7 @@ func runExportCommand(ctx *tf_export.ResourceDiscoveryContext) error {
 				}
 			}
 
-			utils.Debugf("[DEBUG] discover: Completed step %d", i)
+			utils.Debugf("[DEBUG] discover: Completed step %d, %s", i, step.getBaseStep().name)
 			utils.Debugf("[DEBUG] discovered %d resources for step %d", len(step.getDiscoveredResources()), i)
 		}(i, step)
 
@@ -610,7 +610,7 @@ func generateStateParallel(ctx *tf_export.ResourceDiscoveryContext, steps []reso
 		sem <- struct{}{}
 
 		go func(i int, step resourceDiscoveryStep) {
-			utils.Debugf("[DEBUG] writing temp config and state: Running step %d", i)
+			utils.Debugf("[DEBUG] writing temp config and state: Running step %d-%s", i, step.getBaseStep().name)
 			defer elapsed(fmt.Sprintf("time taken by step %s to generate state", fmt.Sprint(i)), step.getBaseStep(), GeneratingState)()
 			defer func() {
 				<-sem
@@ -798,7 +798,9 @@ func importResource(ctx *tf_export.ResourceDiscoveryContext, resource *tf_export
 	}
 	if importErr := ctxTerraformImportVar(ctx, context.Background(), resource.GetTerraformReference(), importId, importArgs...); importErr != nil {
 		utils.Logf("[ERROR] terraform import command failed for resource '%s' at id '%s': %s", resource.GetTerraformReference(), importId, importErr.Error())
-
+		if strings.Contains(importErr.Error(), "Missing source file for snapshot") {
+			utils.ListCurrentDirectory()
+		}
 		// mark resource as errored so that it can be skipped while writing configurations
 		resource.IsErrorResource = true
 
@@ -961,7 +963,7 @@ func findResources(ctx *tf_export.ResourceDiscoveryContext, root *tf_export.OCIR
 		ch <- struct{}{}
 
 		go func(i int, childType tf_export.TerraformResourceAssociation) {
-			utils.Debugf("[DEBUG] findResources: finding resources for resource type index: %d", i)
+			utils.Debugf("[DEBUG] findResources: Starting to find resources for resource type index: %d, type: %s", i, childType.ResourceClass)
 
 			defer func(tfMeta *tf_export.TerraformResourceAssociation, err *error) {
 				<-ch
@@ -971,7 +973,7 @@ func findResources(ctx *tf_export.ResourceDiscoveryContext, root *tf_export.OCIR
 					*err = returnErr
 					debug.PrintStack()
 				}
-				utils.Debugf("[DEBUG] findResourcesWg done, resource type index: %d", i)
+				utils.Debugf("[DEBUG] findResourcesWg done, resource type index: %d, type %s", i, childType.ResourceClass)
 				findResourcesWg.Done()
 			}(&childType, &err)
 
@@ -1018,6 +1020,7 @@ func findResources(ctx *tf_export.ResourceDiscoveryContext, root *tf_export.OCIR
 						if resource.Parent != nil && ctx.ExpectedResourceIds[resource.Parent.Id] {
 							ctx.ExpectedResourceIds[resource.Id] = true
 						} else {
+							utils.Debugf("[DEBUG] resource %s is not exportable %v, childType %v", resource.GetTerraformReference(), childType.AlwaysExportable, childType.ResourceClass)
 							resource.OmitFromExport = !childType.AlwaysExportable
 						}
 					}
@@ -1032,7 +1035,7 @@ func findResources(ctx *tf_export.ResourceDiscoveryContext, root *tf_export.OCIR
 				foundResources = append(foundResources, subResources...)
 				foundResourcesLock.Unlock()
 			}
-			utils.Debugf("[DEBUG] findResources: Completed for resource type index %d", i)
+			utils.Debugf("[DEBUG] findResources: Completed for resource type index: %d, childType: %s", i, childType.ResourceClass)
 		}(i, childType)
 	}
 

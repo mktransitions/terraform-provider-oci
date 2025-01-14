@@ -270,8 +270,9 @@ func (r *resourceDiscoveryBaseStep) writeTmpConfigurationForImport() error {
 	builder.WriteString("## This is tmp config to run import for resources\n\n")
 	for _, resource := range r.discoveredResources {
 		if resource.TerraformTypeInfo != nil && resource.TerraformTypeInfo.IsDataSource {
-			fmt.Println("Skipping the data source as we are just writing temp configuration to import the resource", resource.TerraformClass, resource.TerraformName)
+			utils.Logf("[INFO]Skipping the data source as we are just writing temp configuration to import the resource", resource.TerraformClass, resource.TerraformName)
 		} else {
+			utils.Debugf("Writting temp config for resource '%s.%s'", resource.TerraformClass, resource.TerraformName)
 			builder.WriteString(fmt.Sprintf("resource %s %s {}\n\n", resource.TerraformClass, resource.TerraformName))
 		}
 
@@ -279,7 +280,7 @@ func (r *resourceDiscoveryBaseStep) writeTmpConfigurationForImport() error {
 		r.ctx.DiscoveredResources = append(r.ctx.DiscoveredResources, resource)
 		r.ctx.CtxLock.Unlock()
 	}
-
+	utils.Debugf("[DEBUG] dump temp configuration into '%s'", file.Name())
 	_, err = file.WriteString(string(builder.String()))
 	if err != nil {
 		_ = file.Close()
@@ -344,6 +345,7 @@ func (r *resourceDiscoveryBaseStep) writeConfiguration() error {
 			r.ctx.DiscoveredResources = append(r.ctx.DiscoveredResources, resource)
 			exportedResourceCount++
 		} else {
+			utils.Debugf("[DEBUG] ===> SKIP Generating resource '%s' .", resource.GetTerraformReference())
 			// remove missing attributes info if present for a failed resource
 			missingAttributesPerResourceLock.Lock()
 			if _, ok := r.ctx.MissingAttributesPerResource[resource.GetTerraformReference()]; ok {
@@ -429,6 +431,7 @@ func (r *resourceDiscoveryWithGraph) discover() error {
 
 			r.discoveredResources = append(r.discoveredResources, resource)
 		} else {
+			utils.Debugf("[DEBUG] resource %s is omitted", resource.GetTerraformReference())
 			r.omittedResources = append(r.omittedResources, resource)
 		}
 	}

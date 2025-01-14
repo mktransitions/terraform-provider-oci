@@ -191,7 +191,7 @@ type ErrorTypeEnum string
 var TfHclVersionvar TfHclVersion
 var GetHclStringFromGenericMap = func(builder *strings.Builder, ociRes *OCIResource, interpolationMap map[string]string) error {
 	resourceSchema := ResourcesMap[ociRes.TerraformClass]
-
+	utils.Debugf("[DEBUG]===> Writing final configuration for resource '%s.%s'", ociRes.TerraformClass, ociRes.TerraformName)
 	builder.WriteString(fmt.Sprintf("resource %s %s {\n", ociRes.TerraformClass, ociRes.TerraformName))
 	// Generate variable file from user input
 	if err := exportAttributeAsVariable(ociRes.SourceAttributes, ociRes.TerraformClass, ociRes.TerraformName, interpolationMap); err != nil {
