@@ -52,7 +52,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/oklog/run v1.0.0 // indirect
-	github.com/oracle/oci-go-sdk/v65 v65.81.1
+	github.com/oracle/oci-go-sdk/v65 v65.81.2
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/sony/gobreaker v0.5.0 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
@@ -68,6 +68,6 @@ require (
 )
 
 // Uncomment this line to get OCI Go SDK from local source instead of github
-replace github.com/oracle/oci-go-sdk/v65 v65.81.1 => ./vendor/github.com/oracle/oci-go-sdk
+// replace github.com/oracle/oci-go-sdk/v65 v65.81.2 => ./vendor/github.com/oracle/oci-go-sdk
 
 go 1.21
