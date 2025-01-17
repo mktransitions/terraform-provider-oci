@@ -220,6 +220,7 @@ type CoreVolumeBackupResourceCrud struct {
 	Client                 *oci_core.BlockstorageClient
 	SourceRegionClient     *oci_core.BlockstorageClient
 	workRequestClient      *oci_work_requests.WorkRequestClient
+	SourceRegionWRClient   *oci_work_requests.WorkRequestClient
 	Res                    *oci_core.VolumeBackup
 	DisableNotFoundRetries bool
 }
@@ -323,7 +324,8 @@ func (s *CoreVolumeBackupResourceCrud) createVolumeBackupCopy() error {
 	s.Res = &response.VolumeBackup
 
 	if workRequestId != nil {
-		_, err := tfresource.WaitForWorkRequestWithErrorHandling(s.workRequestClient, workRequestId, "volumeBackup", oci_work_requests.WorkRequestResourceActionTypeCreated, s.D.Timeout(schema.TimeoutCreate), s.DisableNotFoundRetries)
+		//_, err := tfresource.WaitForWorkRequestWithErrorHandling(s.workRequestClient, workRequestId, "volumeBackup", oci_work_requests.WorkRequestResourceActionTypeCreated, s.D.Timeout(schema.TimeoutCreate), s.DisableNotFoundRetries)
+		_, err := tfresource.WaitForWorkRequestWithErrorHandling(s.SourceRegionWRClient, workRequestId, "volumeBackup", oci_work_requests.WorkRequestResourceActionTypeCreated, s.D.Timeout(schema.TimeoutCreate), s.DisableNotFoundRetries)
 		if err != nil {
 			return err
 		}
