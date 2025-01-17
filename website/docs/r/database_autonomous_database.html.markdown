@@ -99,6 +99,7 @@ resource "oci_database_autonomous_database" "test_autonomous_database" {
 	ncharacter_set = var.autonomous_database_ncharacter_set
 	nsg_ids = var.autonomous_database_nsg_ids
 	ocpu_count = var.autonomous_database_ocpu_count
+        private_endpoint_ip = var.autonomous_database_private_endpoint_ip
 	private_endpoint_label = var.autonomous_database_private_endpoint_label
 	refreshable_mode = var.autonomous_database_refreshable_mode
 	resource_pool_leader_id = oci_database_resource_pool_leader.test_resource_pool_leader.id
