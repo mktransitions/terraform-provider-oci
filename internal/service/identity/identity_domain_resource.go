@@ -590,21 +590,42 @@ func (s *IdentityDomainResourceCrud) Update() error {
 }
 
 func (s *IdentityDomainResourceCrud) Delete() error {
-	request := oci_identity.DeleteDomainRequest{}
-
 	tmp := s.D.Id()
-	request.DomainId = &tmp
 
-	request.RequestMetadata.RetryPolicy = tfresource.GetRetryPolicy(s.DisableNotFoundRetries, "identity")
+	deactivateRequest := oci_identity.DeactivateDomainRequest{}
 
-	response, err := s.Client.DeleteDomain(context.Background(), request)
+	deactivateRequest.DomainId = &tmp
+
+	deactivateRequest.RequestMetadata.RetryPolicy = tfresource.GetRetryPolicy(s.DisableNotFoundRetries, "identity")
+
+	deactivateResponse, err := s.Client.DeactivateDomain(context.Background(), deactivateRequest)
 	if err != nil {
 		return err
 	}
 
-	workId := response.OpcWorkRequestId
+	deactivateWorkId := deactivateResponse.OpcWorkRequestId
 	// Wait until it finishes
-	_, delWorkRequestErr := domainWaitForWorkRequest(workId, "domain",
+	_, deactivateWorkRequestErr := domainWaitForWorkRequest(deactivateWorkId, "domain",
+		oci_identity.IamWorkRequestResourceActionTypeUpdated, s.D.Timeout(schema.TimeoutDelete), s.DisableNotFoundRetries, s.Client)
+
+	if deactivateWorkRequestErr != nil {
+		return deactivateWorkRequestErr
+	}
+
+	deleteRequest := oci_identity.DeleteDomainRequest{}
+
+	deleteRequest.DomainId = &tmp
+
+	deleteRequest.RequestMetadata.RetryPolicy = tfresource.GetRetryPolicy(s.DisableNotFoundRetries, "identity")
+
+	deleteResponse, err := s.Client.DeleteDomain(context.Background(), deleteRequest)
+	if err != nil {
+		return err
+	}
+
+	deleteWorkId := deleteResponse.OpcWorkRequestId
+	// Wait until it finishes
+	_, delWorkRequestErr := domainWaitForWorkRequest(deleteWorkId, "domain",
 		oci_identity.IamWorkRequestResourceActionTypeUpdated, s.D.Timeout(schema.TimeoutDelete), s.DisableNotFoundRetries, s.Client)
 	return delWorkRequestErr
 }
