@@ -439,6 +439,7 @@ func RouteRuleToMap(obj oci_core.RouteRule) map[string]interface{} {
 	}
 
 	result["destination_type"] = string(obj.DestinationType)
+	result["route_type"] = string(obj.RouteType)
 
 	if obj.NetworkEntityId != nil {
 		result["network_entity_id"] = string(*obj.NetworkEntityId)
