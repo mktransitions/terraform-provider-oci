@@ -597,7 +597,7 @@ func (s *CoreVcnResourceCrud) SetData() error {
 
 	s.D.Set("security_attributes", tfresource.SecurityAttributesToMap(s.Res.SecurityAttributes))
 
-	if s.Res.Ipv6CidrBlocks != nil && len(s.Res.Ipv6CidrBlocks) > 0 {
+	if (s.Res.Ipv6CidrBlocks != nil && len(s.Res.Ipv6CidrBlocks) > 0) || (s.Res.Ipv6PrivateCidrBlocks != nil && len(s.Res.Ipv6PrivateCidrBlocks) > 0) {
 		s.D.Set("is_ipv6enabled", true)
 	} else {
 		s.D.Set("is_ipv6enabled", nil)
