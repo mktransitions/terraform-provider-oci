@@ -1715,6 +1715,9 @@ func (s *CoreInstanceResourceCrud) SetData() error {
 
 	if s.Res.ExtendedMetadata != nil {
 		s.D.Set("extended_metadata", tfresource.GenericMapToJsonMap(s.Res.ExtendedMetadata))
+	} else {
+		extended_metadata := map[string]interface{}{}
+		s.D.Set("extended_metadata", extended_metadata)
 	}
 
 	if s.Res.FaultDomain != nil {
@@ -1829,6 +1832,9 @@ func (s *CoreInstanceResourceCrud) SetData() error {
 
 	if s.Res.SystemTags != nil {
 		s.D.Set("system_tags", tfresource.SystemTagsToMap(s.Res.SystemTags))
+	} else {
+		system_tags := map[string]interface{}{}
+		s.D.Set("system_tags", system_tags)
 	}
 
 	if s.Res.TimeCreated != nil {

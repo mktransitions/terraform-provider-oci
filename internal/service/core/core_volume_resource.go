@@ -730,6 +730,9 @@ func (s *CoreVolumeResourceCrud) SetData() error {
 
 	if s.Res.SystemTags != nil {
 		s.D.Set("system_tags", tfresource.SystemTagsToMap(s.Res.SystemTags))
+	} else {
+		system_tags := map[string]interface{}{}
+		s.D.Set("system_tags", system_tags)
 	}
 
 	if s.Res.TimeCreated != nil {
