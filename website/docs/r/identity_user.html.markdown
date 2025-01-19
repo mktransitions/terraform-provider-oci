@@ -66,7 +66,7 @@ The following arguments are supported:
 * `compartment_id` - (Required) The OCID of the tenancy containing the user.
 * `defined_tags` - (Optional) (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. For more information, see [Resource Tags](https://docs.cloud.oracle.com/iaas/Content/General/Concepts/resourcetags.htm). Example: `{"Operations.CostCenter": "42"}` 
 * `description` - (Required) (Updatable) The description you assign to the user during creation. Does not have to be unique, and it's changeable.
-* `email` - (Optional) (Updatable) The email you assign to the user. Has to be unique across the tenancy.
+* `email` - (Required for tenancies that support identity domains, Optional for those that do not) (Updatable) The email you assign to the user. Has to be unique across the tenancy.
 * `freeform_tags` - (Optional) (Updatable) Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. For more information, see [Resource Tags](https://docs.cloud.oracle.com/iaas/Content/General/Concepts/resourcetags.htm). Example: `{"Department": "Finance"}` 
 * `name` - (Required) The name you assign to the user during creation. This is the user's login for the Console. The name must be unique across all users in the tenancy and cannot be changed. 
 
