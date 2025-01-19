@@ -45,16 +45,16 @@ func BastionBastionResource() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-
-			// Optional
 			"client_cidr_block_allow_list": {
 				Type:     schema.TypeList,
-				Optional: true,
+				Required: true,
 				Computed: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
+
+			// Optional
 			"defined_tags": {
 				Type:             schema.TypeMap,
 				Optional:         true,

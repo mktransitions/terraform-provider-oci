@@ -39,7 +39,7 @@ resource "oci_bastion_bastion" "test_bastion" {
 The following arguments are supported:
 
 * `bastion_type` - (Required) The type of bastion. Use `standard`. 
-* `client_cidr_block_allow_list` - (Optional) (Updatable) A list of address ranges in CIDR notation that you want to allow to connect to sessions hosted by this bastion.
+* `client_cidr_block_allow_list` - (Required) (Updatable) A list of address ranges in CIDR notation that you want to allow to connect to sessions hosted by this bastion.
 * `compartment_id` - (Required) (Updatable) The unique identifier (OCID) of the compartment where the bastion is located.
 * `defined_tags` - (Optional) (Updatable) Defined tags for this resource. Each key is predefined and scoped to a namespace. Example: `{"foo-namespace.bar-key": "value"}` 
 * `dns_proxy_status` - (Optional) Flag to enable FQDN and SOCKS5 Proxy Support. Example: `ENABLED`, `DISABLED`
