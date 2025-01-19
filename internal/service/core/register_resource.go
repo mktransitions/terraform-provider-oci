@@ -52,6 +52,7 @@ func RegisterResource() {
 	tfresource.RegisterResource("oci_core_network_security_group_security_rule", CoreNetworkSecurityGroupSecurityRuleResource())
 	tfresource.RegisterResource("oci_core_private_ip", CorePrivateIpResource())
 	tfresource.RegisterResource("oci_core_public_ip", CorePublicIpResource())
+	tfresource.RegisterResource("oci_core_public_ip_attachment", CorePublicIpAttachmentResource())
 	tfresource.RegisterResource("oci_core_public_ip_pool", CorePublicIpPoolResource())
 	tfresource.RegisterResource("oci_core_public_ip_pool_capacity", PublicIpPoolCapacityResource())
 	tfresource.RegisterResource("oci_core_remote_peering_connection", CoreRemotePeeringConnectionResource())
